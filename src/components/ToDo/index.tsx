@@ -21,14 +21,22 @@ export function ToDo() {
         return () => clearTimeout(timerRef.current);
     }, []);
 
+    React.useEffect(() => {
+        const storedTasks = localStorage.getItem('tasks');
+        if (storedTasks) {
+            setTasks(JSON.parse(storedTasks));
+        }
+    }, []);
+    
+
 
     const addTask = (task: string) => {
         if (tasks.length >= 6) {
-            handleToast("em excesso! Termine uma tarefa para adicionar outra");
+            handleToast("em excesso! Termine uma tarefa para adicionar outra.");
             return;
         }
         if (task.length > 120) {
-            handleToast("muito longa! Tente uma tarefa com no máximo 120 caracteres");
+            handleToast("muito longa! Tente uma tarefa com no máximo 120 caracteres.");
             return;
         }
         if (task.length > 0) {
@@ -37,33 +45,39 @@ export function ToDo() {
                 text: task,
                 done: false,
             };
-            const newTasks = [...tasks, newTask];
-            setTasks(newTasks);
-            localStorage.setItem('tasks', JSON.stringify(newTasks));
+            const updatedTasks = [...tasks, newTask];
+            setTasks(updatedTasks);
+            localStorage.setItem('tasks', JSON.stringify(updatedTasks));
         }
     };
-    React.useEffect(() => {
-        const storedTasks = JSON.parse(localStorage.getItem('tasks') || '[]');
-        setTasks(storedTasks);
-      }, []);
 
     const removeTask = (id: number) => {
         handleToast("excluída");
-        setTasks(tasks.filter((task) => task.id !== id));
+        const updatedTasks = tasks.filter((task) => task.id !== id);
+        setTasks(updatedTasks);
+        localStorage.setItem('tasks', JSON.stringify(updatedTasks));
     };
 
     const markTaskAsDone = (id: number) => {
         setTasks(tasks.map((task) => {
             if (task.id === id) {
                 if (task.done) {
-                    handleToast("desmarcada");
+                    handleToast("desmarcada.");
                     return { ...task, done: false };
                 }
-                handleToast("concluída");
+                handleToast("concluída!");
                 return { ...task, done: true };
             }
             return task;
         }));
+        const updatedTasks = tasks.map((task) => {
+            if (task.id === id) {
+                return { ...task, done: !task.done };
+            }
+            return task;
+        });
+        setTasks(updatedTasks);
+        localStorage.setItem('tasks', JSON.stringify(updatedTasks));
     };
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -119,7 +133,7 @@ export function ToDo() {
                     duration={1000}
                 >
                     <Toast.Title className="[grid-area:_title] mb-[5px] font-medium text-slate12 text-[15px]">
-                        {`Tarefa ${taskState}!`}
+                        {`Tarefa ${taskState}.`}
                     </Toast.Title>
                 </Toast.Root>
                 <Toast.Viewport className="[--viewport-padding:_25px] fixed bottom-0 right-0 flex flex-col p-[var(--viewport-padding)] gap-[10px] w-[390px] max-w-[100vw] m-0 list-none z-[2147483647] outline-none" />
