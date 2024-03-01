@@ -32,11 +32,11 @@ export function ToDo() {
 
     const addTask = (task: string) => {
         if (tasks.length >= 6) {
-            handleToast("em excesso! Termine uma tarefa para adicionar outra.");
+            handleToast("em excesso! Termine uma tarefa para adicionar outra");
             return;
         }
         if (task.length > 120) {
-            handleToast("muito longa! Tente uma tarefa com no máximo 120 caracteres.");
+            handleToast("muito longa! Tente uma tarefa com no máximo 120 caracteres");
             return;
         }
         if (task.length > 0) {
@@ -62,10 +62,10 @@ export function ToDo() {
         setTasks(tasks.map((task) => {
             if (task.id === id) {
                 if (task.done) {
-                    handleToast("desmarcada.");
+                    handleToast("desmarcada");
                     return { ...task, done: false };
                 }
-                handleToast("concluída!");
+                handleToast("concluída");
                 return { ...task, done: true };
             }
             return task;
