@@ -3,7 +3,6 @@ import { Button } from '../Button/Button';
 import { CheckIcon, TrashIcon } from '@radix-ui/react-icons'
 import { Text } from '@radix-ui/themes'
 import * as Toast from '@radix-ui/react-toast';
-import {faker} from '@faker-js/faker/locale/pt_BR';
 
 
 interface Task {
@@ -17,7 +16,6 @@ export function ToDo() {
     const [open, setOpen] = React.useState(false);
     const timerRef = React.useRef(0);
     const [taskState, setTaskState] = useState('');
-    const currentGenre = faker.music.genre();
 
     React.useEffect(() => {
         return () => clearTimeout(timerRef.current);
@@ -79,17 +77,17 @@ export function ToDo() {
     }
     return (
         <>
-        <div className="container mx-auto bg-white bg-opacity-75 rounded shadow-md shadow-gray-300 p-4 max-w-prose">
+        <div className="container mx-auto bg-white bg-opacity-75 rounded shadow-md shadow-gray-300 p-4 max-w-96">
             <h1 className="text-3xl font-bold pb-4">É PRA HOJE!!!!</h1>
             <input type="text"
-                className="grow shrink-0 rounded px-2.5 text-[15px] leading-none text-violet11 shadow-[0_0_0_1px] shadow-violet7 h-[35px] focus:shadow-[0_0_0_2px] focus:shadow-violet8 outline-none min-w-96"
+                className="grow shrink-0 rounded px-2.5 text-[15px] leading-none text-violet11 shadow-[0_0_0_1px] shadow-violet7 h-[35px] focus:shadow-[0_0_0_2px] focus:shadow-violet8 outline-none min-w-80"
                 placeholder="Comprar café"
                 onKeyDown={handleKeyDown}
             />
             <ul className="list-none">
                 {tasks.map((task) => (
                     <li key={task.id} className="flex items-center justify-between border-b border-gray-300 p-2 space-x-4">
-                        <span className={`font-medium ${task.done ? 'line-through text-zinc-500' : ''} text-wrap break-words max-w-96 pt-2`}>
+                        <span className={`font-medium ${task.done ? 'line-through text-zinc-500' : ''} text-wrap break-words max-w-60 pt-2`}>
                             <Text>
                                 {task.text}
                             </Text>
