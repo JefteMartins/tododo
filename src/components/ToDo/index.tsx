@@ -23,11 +23,11 @@ export function ToDo() {
 
 
     const addTask = (task: string) => {
-        if(tasks.length >= 6){
+        if (tasks.length >= 6) {
             handleToast("em excesso! Termine uma tarefa para adicionar outra");
             return;
         }
-        if(task.length > 120){
+        if (task.length > 120) {
             handleToast("muito longa! Tente uma tarefa com no máximo 120 caracteres");
             return;
         }
@@ -37,10 +37,15 @@ export function ToDo() {
                 text: task,
                 done: false,
             };
-            setTasks([...tasks, newTask]);
+            const newTasks = [...tasks, newTask];
+            setTasks(newTasks);
+            localStorage.setItem('tasks', JSON.stringify(newTasks));
         }
     };
-
+    React.useEffect(() => {
+        const storedTasks = JSON.parse(localStorage.getItem('tasks') || '[]');
+        setTasks(storedTasks);
+      }, []);
 
     const removeTask = (id: number) => {
         handleToast("excluída");
@@ -77,35 +82,36 @@ export function ToDo() {
     }
     return (
         <>
-        <div className="container mx-auto bg-white bg-opacity-75 rounded shadow-md shadow-gray-300 p-4 max-w-96">
-            <h1 className="text-3xl font-bold pb-4">É PRA HOJE!!!!</h1>
-            <input type="text"
-                className="grow shrink-0 rounded px-2.5 text-[15px] leading-none text-violet11 shadow-[0_0_0_1px] shadow-violet7 h-[35px] focus:shadow-[0_0_0_2px] focus:shadow-violet8 outline-none min-w-80"
-                placeholder="Comprar café"
-                onKeyDown={handleKeyDown}
-            />
-            <ul className="list-none">
-                {tasks.map((task) => (
-                    <li key={task.id} className="flex items-center justify-between border-b border-gray-300 p-2 space-x-4">
-                        <span className={`font-medium ${task.done ? 'line-through text-zinc-500' : ''} text-wrap break-words max-w-60 pt-2`}>
-                            <Text>
-                                {task.text}
-                            </Text>
-                        </span>
-                        <div className="flex flex-row-reverse space-x-1 space-x-reverse">
-                            <Button color='crimson' onClick={() => removeTask(task.id)}>
-                                <TrashIcon />
-                            </Button>
-                            <Button color='grass' onClick={() => markTaskAsDone(task.id)}>
-                                <CheckIcon />
-                            </Button>
-
-                        </div>
-                    </li>
-                ))}
-            </ul>
-        </div>
-        <Toast.Provider swipeDirection="right">
+            <div className="container mx-auto bg-white bg-opacity-75 rounded shadow-md shadow-gray-300 p-4 max-w-96">
+                <h1 className="text-3xl font-bold pb-4">É PRA HOJE!!!!</h1>
+                <div className='flex flex-row space-x-1'>
+                <input type="text"
+                    className="grow shrink-0 rounded px-2.5 text-[15px] leading-none text-violet11 shadow-[0_0_0_1px] shadow-violet7 h-[35px] focus:shadow-[0_0_0_2px] focus:shadow-violet8 outline-none min-w-80"
+                    placeholder="Comprar café"
+                    onKeyDown={handleKeyDown}
+                />
+                </div>
+                <ul className="list-none">
+                    {tasks.map((task) => (
+                        <li key={task.id} className="flex items-center justify-between border-b border-gray-300 p-2 space-x-4">
+                            <span className={`font-medium ${task.done ? 'line-through text-zinc-500' : ''} text-wrap break-words max-w-60 pt-2`}>
+                                <Text>
+                                    {task.text}
+                                </Text>
+                            </span>
+                            <div className="flex flex-row-reverse space-x-1 space-x-reverse">
+                                <Button color='crimson' onClick={() => removeTask(task.id)}>
+                                    <TrashIcon />
+                                </Button>
+                                <Button color='grass' onClick={() => markTaskAsDone(task.id)}>
+                                    <CheckIcon />
+                                </Button>
+                            </div>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+            <Toast.Provider swipeDirection="right">
                 <Toast.Root
                     className="bg-white rounded-md shadow-[hsl(206_22%_7%_/_35%)_0px_10px_38px_-10px,_hsl(206_22%_7%_/_20%)_0px_10px_20px_-15px] p-[15px] grid [grid-template-areas:_'title_action'_'description_action'] grid-cols-[auto_max-content] gap-x-[15px] items-center data-[state=open]:animate-slideIn data-[state=closed]:animate-hide data-[swipe=move]:translate-x-[var(--radix-toast-swipe-move-x)] data-[swipe=cancel]:translate-x-0 data-[swipe=cancel]:transition-[transform_200ms_ease-out] data-[swipe=end]:animate-swipeOut"
                     open={open}
